@@ -30,18 +30,27 @@ window.onload = function(){
     const btnDisplayColor = document.getElementById("btn_op_displaycolor")
     const btnAccumAdd = document.getElementById("btn_op_accumadd")
     const btnAccumSub = document.getElementById("btn_op_accumsub")
+    const btnExp = document.getElementById("btn_op_exp")
+
+    function updateOutput(value) {
+        outputElement.innerHTML = value || '0'
+    }
+
+    function limitLength(str) {
+        return str.substring(0, 12)
+    }
 
     function onDigitButtonClicked(digit) {
         if (!selectedOperation) {
-            if (digit !== '.' || (digit === '.' && !a.includes('.'))) {
+            if ((digit !== '.' || (digit === '.' && !a.includes('.'))) && a.length < 12) {
                 a += digit
             }
-            outputElement.innerHTML = a || '0'
+            updateOutput(a)
         } else {
-            if (digit !== '.' || (digit === '.' && !b.includes('.'))) {
+            if ((digit !== '.' || (digit === '.' && !b.includes('.'))) && b.length < 12) {
                 b += digit
             }
-            outputElement.innerHTML = b || '0'
+            updateOutput(b)
         }
     }
 
@@ -89,7 +98,7 @@ window.onload = function(){
             isAccumulating = false
             accumulatedValue = 0
             accumulationType = null
-            outputElement.innerHTML = '0'
+            updateOutput('0')
         }
     }
 
@@ -110,7 +119,7 @@ window.onload = function(){
                     break
                 case '/':
                     if (+b === 0) {
-                        outputElement.innerHTML = 'Error'
+                        updateOutput('Error')
                         a = ''
                         b = ''
                         selectedOperation = null
@@ -122,10 +131,10 @@ window.onload = function(){
                     break
             }
 
-            a = expressionResult.toString()
+            a = limitLength(expressionResult.toString())
             b = ''
             selectedOperation = null
-            outputElement.innerHTML = a
+            updateOutput(a)
         }
     }
 
@@ -134,8 +143,8 @@ window.onload = function(){
     if (btnPlusMinus) {
         btnPlusMinus.onclick = function() {
             if (a !== '' && a !== '0') {
-                a = (parseFloat(a) * -1).toString()
-                outputElement.innerHTML = a
+                a = limitLength((parseFloat(a) * -1).toString())
+                updateOutput(a)
             }
         }
     }
@@ -143,8 +152,8 @@ window.onload = function(){
     if (btnPercent) {
         btnPercent.onclick = function() {
             if (a !== '') {
-                a = (parseFloat(a) / 100).toString()
-                outputElement.innerHTML = a
+                a = limitLength((parseFloat(a) / 100).toString())
+                updateOutput(a)
             }
         }
     }
@@ -153,10 +162,10 @@ window.onload = function(){
         btnBackspace.onclick = function() {
             if (!selectedOperation && a !== '') {
                 a = a.slice(0, -1)
-                outputElement.innerHTML = a || '0'
+                updateOutput(a || '0')
             } else if (selectedOperation && b !== '') {
                 b = b.slice(0, -1)
-                outputElement.innerHTML = b || '0'
+                updateOutput(b || '0')
             }
         }
     }
@@ -174,10 +183,10 @@ window.onload = function(){
             if (a !== '') {
                 const num = parseFloat(a)
                 if (num >= 0) {
-                    a = Math.sqrt(num).toString()
-                    outputElement.innerHTML = a
+                    a = limitLength(Math.sqrt(num).toString())
+                    updateOutput(a)
                 } else {
-                    outputElement.innerHTML = 'Error'
+                    updateOutput('Error')
                     a = ''
                 }
             }
@@ -188,8 +197,8 @@ window.onload = function(){
         btnSquare.onclick = function() {
             if (a !== '') {
                 const num = parseFloat(a)
-                a = (num * num).toString()
-                outputElement.innerHTML = a
+                a = limitLength((num * num).toString())
+                updateOutput(a)
             }
         }
     }
@@ -203,10 +212,10 @@ window.onload = function(){
                     for (let i = 2; i <= num; i++) {
                         factorial *= i
                     }
-                    a = factorial.toString()
-                    outputElement.innerHTML = a
+                    a = limitLength(factorial.toString())
+                    updateOutput(a)
                 } else {
-                    outputElement.innerHTML = 'Error'
+                    updateOutput('Error')
                     a = ''
                 }
             }
@@ -216,11 +225,15 @@ window.onload = function(){
     if (btnTripleZero) {
         btnTripleZero.onclick = function() {
             if (!selectedOperation) {
-                a += '000'
-                outputElement.innerHTML = a
+                if (a.length <= 9) {
+                    a += '000'
+                    updateOutput(a)
+                }
             } else {
-                b += '000'
-                outputElement.innerHTML = b
+                if (b.length <= 9) {
+                    b += '000'
+                    updateOutput(b)
+                }
             }
         }
     }
@@ -238,8 +251,8 @@ window.onload = function(){
                     accumulatedValue = parseFloat(a)
                     accumulationType = 'add'
                 }
-                a = accumulatedValue.toString()
-                outputElement.innerHTML = a
+                a = limitLength(accumulatedValue.toString())
+                updateOutput(a)
                 b = ''
                 selectedOperation = null
             }
@@ -259,8 +272,8 @@ window.onload = function(){
                     accumulatedValue = parseFloat(a)
                     accumulationType = 'subtract'
                 }
-                a = accumulatedValue.toString()
-                outputElement.innerHTML = a
+                a = limitLength(accumulatedValue.toString())
+                updateOutput(a)
                 b = ''
                 selectedOperation = null
             }
@@ -279,8 +292,18 @@ window.onload = function(){
         btnCube.onclick = function() {
             if (a !== '') {
                 const num = parseFloat(a)
-                a = (num * num * num).toString()
-                outputElement.innerHTML = a
+                a = limitLength((num * num * num).toString())
+                updateOutput(a)
+            }
+        }
+    }
+
+    if (btnExp) {
+        btnExp.onclick = function() {
+            if (a !== '') {
+                const num = parseFloat(a)
+                a = limitLength((Math.exp(num)).toString())
+                updateOutput(a)
             }
         }
     }
