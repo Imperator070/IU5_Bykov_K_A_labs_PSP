@@ -399,3 +399,20 @@ window.onload = function(){
 8. Для тройного нуля просто добавьте "000" к строке
 9. Для накапливаемых операций сохраняйте предыдущий результат
 10. Для индивидуальной операции проявите фантазию!
+
+## 6. Выполненное задание
+
+Калькулятор (рабочий)
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/002531b6-549e-4d1b-9937-6214f917dfe1" />
+
+## 7. Дополнительные задания преподавателя
+1. Добавление функции вычисления экспоненты
+<img width="1148" height="276" alt="image" src="https://github.com/user-attachments/assets/345bee99-6fd1-421e-949c-e930816a0b42" />
+<img width="1204" height="44" alt="image" src="https://github.com/user-attachments/assets/8def83ab-99cc-4c1b-8d00-0d8aa01eaba3" />
+<img width="750" height="372" alt="image" src="https://github.com/user-attachments/assets/cb880d54-f856-4284-9d95-0c1406fcafaa" />
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/04d19459-5cab-4d93-94c1-da4e899b1501" />
+
+2. Добавить округление
+<img width="680" height="279" alt="image" src="https://github.com/user-attachments/assets/4e252350-c9ff-48c2-8c3f-4955329228ca" />
+<img width="926" height="821" alt="image" src="https://github.com/user-attachments/assets/21b581a2-057d-4f14-8fd2-25cdf24543d3" />
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/94f65342-5961-42cc-a4d4-ea55079ac022" />
