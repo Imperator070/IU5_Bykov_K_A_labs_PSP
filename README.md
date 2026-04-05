@@ -472,3 +472,28 @@ p.my-large-italic {
 18. Сделайте сворачивающиеся и разворачивающиеся подробности (Автор -> ФИО, Группа);
 19. Добавьте поле с целью ЛР и подсветить слова: знакомство, HTML, CSS (с помощью тега).
 20. Скопируйте для калькулятора стилистику веб-ресурса, которая не будет повторяться с остальными студентами
+
+## 9. Результаты работы
+
+1. Исходный сайт по заданию (Подбор электронных компонентов для устройства)
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/79dd4849-78df-46f9-9d7e-1f6443bdd2ce" />
+
+2. Копия сайта
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/5d10a2ff-a207-43a5-8c26-d6de9cd6c008" />
+
+3. Страница продукта
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/f5ce026e-ec7a-49b4-be72-d8662b09d86d" />
+
+4. Калькулятор
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/dcf0b252-94c4-48cb-9076-e136d6dfd309" />
+
+## 10. Изменения по требованию преподавателя
+1. Изменение начертания для шрифта для всего документа
+<img width="455" height="196" alt="image" src="https://github.com/user-attachments/assets/9559e036-2607-4c62-bc47-72d38cb35f55" />
+<img width="445" height="239" alt="image" src="https://github.com/user-attachments/assets/656f89b6-bbc2-4b16-9fcd-af85e6e06012" />
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/c189d79e-b339-4cd5-8316-ac402a6dfae6" />
+
+2. Изменения цвета кнопок для других функций
+<img width="428" height="327" alt="image" src="https://github.com/user-attachments/assets/7db9ae59-ee21-461f-b09a-4eaec581c740" />
+<img width="423" height="321" alt="image" src="https://github.com/user-attachments/assets/2c6de319-28fc-45bb-9710-c02ab3012b4a" />
+<img width="2880" height="1746" alt="image" src="https://github.com/user-attachments/assets/359e5821-27a0-4fb8-8743-1c0dc69cd138" />
