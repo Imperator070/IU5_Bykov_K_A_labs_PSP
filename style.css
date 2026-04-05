@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-weight: bold;
 }
 
 body {
@@ -1039,12 +1040,12 @@ ul {
 }
 
 .calc-btn.function {
-    background: #8d005e;
+    background: #288d00;
     color: #fff;
 }
 
 .calc-btn.function:hover {
-    background: #6a0047;
+    background: #006302;
 }
 
 .calc-btn.equals {
