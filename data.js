@@ -45,3 +45,4 @@ window.mockProducts = [
     ]
   }
 ];
+window.cart = [];

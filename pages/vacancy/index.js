@@ -2,6 +2,9 @@ window.getDetailPage = function(product) {
   if (!product) return '<main class="main container py-5"><p class="text-center">Товар не найден</p></main>';
 
   const specsHtml = product.specs.map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`).join('');
+  const inCart = window.cart?.find(c => c.id === product.id);
+  const qty = inCart ? inCart.qty : 1;
+  const sum = product.price * qty;
 
   return `
     <main class="main">
@@ -34,11 +37,14 @@ window.getDetailPage = function(product) {
               <div class="product-actions">
                 <div class="quantity-selector">
                   <button class="qty-btn">−</button>
-                  <input type="text" class="qty-input" value="1">
+                  <input type="text" class="qty-input" value="${qty}">
                   <button class="qty-btn">+</button>
                 </div>
                 <button class="btn-add-cart">В корзину</button>
                 <button class="btn-buy-now">Купить в 1 клик</button>
+              </div>
+              <div class="product-sum mb-3">
+                <strong>Сумма:</strong> <span class="text-danger fs-5">${sum.toLocaleString('ru-RU')} ₽</span>
               </div>
               <div class="product-delivery">
                 <h4>Доставка:</h4>
