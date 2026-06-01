@@ -1,39 +1,70 @@
-window.getMainPage = function(products) {
-  const cardsHtml = products.map(p => `
-    <div class="col-md-4 col-lg-3">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="p-3 d-flex justify-content-center bg-light" style="height: 200px;">
-          <img src="${p.image}" class="img-fluid" style="max-height: 100%; object-fit: contain;" alt="${p.title}">
+window.getMainPage = function(items) {
+    if (!items || items.length === 0) {
+        return `
+      <main class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Акции</h2>
+          <button id="add-product-btn" class="btn btn-success">Добавить акцию</button>
         </div>
+        <p class="text-center mt-5">Список акций пуст</p>
+      </main>
+    `;
+    }
+
+    const cards = items.map(item => `
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img src="${item.src}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title fs-6 mb-1">${p.title}</h5>
-          <p class="card-text text-muted small mb-2">${p.brand}</p>
-          <div class="mt-auto pt-2">
-            <div class="d-flex align-items-center gap-2 mb-3">
-              <span class="fw-bold text-danger fs-5">${p.price} ₽</span>
-              ${p.oldPrice ? `<span class="text-decoration-line-through text-muted small">${p.oldPrice} ₽</span>` : ''}
+          <h5 class="card-title">${item.title}</h5>
+          <p class="card-text text-truncate">${item.text}</p>
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <a href="#detail/${item.id}" class="btn btn-primary">Подробнее</a>
+            <div class="btn-group">
+              <button class="btn btn-outline-secondary edit-btn" data-id="${item.id}">✏️</button>
+              <button class="btn btn-outline-danger delete-btn" data-id="${item.id}">🗑️</button>
             </div>
-            <a href="#detail/${p.id}" class="btn btn-primary w-100 mb-2">Подробнее</a>
-            <button class="btn btn-outline-danger btn-sm w-100 delete-btn" data-id="${p.id}">Удалить</button>
           </div>
         </div>
       </div>
     </div>
   `).join('');
 
-  return `
-    <main class="main py-4">
-      <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="section-title m-0">Каталог товаров</h2>
-          <button id="add-product-btn" class="btn btn-success">+ Добавить (копия первого)</button>
+    return `
+    <main class="container py-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Акции</h2>
+        <button id="add-product-btn" class="btn btn-success">Добавить акцию</button>
+      </div>
+      <div class="mb-4">
+        <input type="text" id="filter-input" class="form-control" placeholder="Поиск по названию или тексту...">
+      </div>
+      <div class="row">
+        ${cards}
+      </div>
+    </main>
+  `;
+};
+
+window.getDetailPage = function(item) {
+    if (!item) return '<main class="container py-5"><p class="text-center">Акция не найдена</p></main>';
+
+    return `
+    <main class="container py-5">
+      <div class="mb-4">
+        <a href="#" class="text-decoration-none">← Назад к списку</a>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <img src="${item.src}" class="img-fluid rounded shadow" alt="${item.title}">
         </div>
-        <div class="input-group mb-4" style="max-width: 350px;">
-          <span class="input-group-text">🔍</span>
-          <input type="text" id="filter-input" class="form-control" placeholder="Поиск по названию или бренду...">
-        </div>
-        <div class="row g-4" id="products-grid">
-          ${cardsHtml}
+        <div class="col-md-6">
+          <h1 class="mb-3">${item.title}</h1>
+          <p class="lead mb-4">${item.text}</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-warning edit-btn" data-id="${item.id}">Редактировать</button>
+            <button class="btn btn-danger delete-btn" data-id="${item.id}">Удалить</button>
+          </div>
         </div>
       </div>
     </main>

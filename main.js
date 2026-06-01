@@ -1,40 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let products = JSON.parse(JSON.stringify(window.mockProducts));
+  let items = [];
   let currentFilter = '';
   const app = document.getElementById('app');
 
+  const loadData = (callback) => {
+    window.api.getAll(
+        (data) => {
+          items = data;
+          if (callback) callback();
+        },
+        (status, err) => {
+          app.innerHTML = `<div class="alert alert-danger m-5">Ошибка: ${status}</div>`;
+        }
+    );
+  };
+
   const updateCartBadge = () => {
     const badge = document.querySelector('.cart-badge');
-    if (badge) {
-      const total = window.cart.reduce((s, i) => s + i.qty, 0);
-      badge.textContent = total;
+    if (badge && window.cart) {
+      badge.textContent = window.cart.reduce((s, i) => s + i.qty, 0);
     }
   };
 
   const getCartSummary = () => {
-    if (window.cart.length === 0) return '';
+    if (!window.cart || window.cart.length === 0) return '';
     const totalQty = window.cart.reduce((s, i) => s + i.qty, 0);
-    const totalSum = window.cart.reduce((sum, item) => {
-      const p = products.find(x => x.id === item.id);
-      return sum + (p ? p.price * item.qty : 0);
-    }, 0);
-    return `<div class="container mt-3"><div class="alert alert-light border shadow-sm d-flex justify-content-between align-items-center p-3"><div class="d-flex align-items-center gap-2"><span style="font-size:24px">🛒</span><div><strong>Корзина:</strong> ${totalQty} шт. | Итого: <strong class="text-danger fs-5">${totalSum.toLocaleString('ru-RU')} ₽</strong></div></div><button id="clear-cart-btn" class="btn btn-outline-danger btn-sm">Очистить</button></div></div>`;
+    return `<div class="container mt-3"><div class="alert alert-light border shadow-sm d-flex justify-content-between align-items-center p-3"><div><span style="font-size:24px">🛒</span> <strong>Выбрано акций:</strong> ${totalQty} шт.</div><button id="clear-cart-btn" class="btn btn-outline-danger btn-sm">Очистить</button></div></div>`;
   };
 
   const render = () => {
     const hash = window.location.hash;
     updateCartBadge();
-    if (hash.startsWith('#detail/')) {
-      const id = parseInt(hash.split('/')[1]);
-      const product = products.find(p => p.id === id);
-      app.innerHTML = window.getHeader() + window.getDetailPage(product) + window.getFooter();
-      const inCart = window.cart.find(c => c.id === id);
+
+    if (hash === '#add') {
+      app.innerHTML = window.getHeader() + window.getFormPage() + window.getFooter();
+    } else if (hash.startsWith('#edit/')) {
+      const id = hash.split('/')[1];
+      const item = items.find(p => String(p.id) === id);
+      app.innerHTML = window.getHeader() + window.getFormPage(item) + window.getFooter();
+    } else if (hash.startsWith('#detail/')) {
+      const id = hash.split('/')[1];
+      const item = items.find(p => String(p.id) === id);
+      app.innerHTML = window.getHeader() + window.getDetailPage(item) + window.getFooter();
+
+      const inCart = (window.cart || []).find(c => String(c.id) === id);
       const qtyInput = document.querySelector('.qty-input');
       if (qtyInput && inCart) qtyInput.value = inCart.qty;
     } else {
       const filtered = currentFilter
-        ? products.filter(p => p.title.toLowerCase().includes(currentFilter) || p.brand.toLowerCase().includes(currentFilter))
-        : products;
+          ? items.filter(p => p.title.toLowerCase().includes(currentFilter) || p.text.toLowerCase().includes(currentFilter))
+          : items;
       app.innerHTML = window.getHeader() + window.getMainPage(filtered) + getCartSummary() + window.getFooter();
       const input = document.getElementById('filter-input');
       if (input) input.value = currentFilter;
@@ -43,51 +58,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
   app.addEventListener('click', (e) => {
     if (e.target.id === 'add-product-btn') {
-      if (products.length > 0) {
-        const copy = { ...products[0], id: Date.now() };
-        products.push(copy);
-        window.location.hash = '';
-        render();
-      }
+      window.location.hash = '#add';
       return;
     }
+
+    if (e.target.classList.contains('details-btn')) {
+      const id = e.target.dataset.id;
+      window.location.hash = `#detail/${id}`;
+      return;
+    }
+
+    if (e.target.classList.contains('edit-btn')) {
+      const id = e.target.dataset.id;
+      window.location.hash = `#edit/${id}`;
+      return;
+    }
+
     if (e.target.classList.contains('delete-btn')) {
-      const id = parseInt(e.target.dataset.id);
-      products = products.filter(p => p.id !== id);
-      window.cart = window.cart.filter(c => c.id !== id);
-      render();
+      const id = e.target.dataset.id;
+      window.api.delete(id, () => {
+        loadData(render);
+      }, console.error);
       return;
     }
+
     if (e.target.id === 'clear-cart-btn') {
       window.cart = [];
       render();
       return;
     }
-    if (e.target.classList.contains('tab-btn')) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      e.target.classList.add('active');
-      const target = document.getElementById('tab-' + e.target.dataset.tab);
-      if (target) target.classList.add('active');
-    }
-    if (e.target.classList.contains('qty-btn')) {
-      const hash = window.location.hash;
-      if (!hash.startsWith('#detail/')) return;
-      const id = parseInt(hash.split('/')[1]);
-      const input = e.target.parentElement.querySelector('.qty-input');
-      let val = parseInt(input.value) || 1;
-      val += e.target.textContent === '+' ? 1 : -1;
-      if (val < 1) val = 1;
-      input.value = val;
-      const existing = window.cart.find(c => c.id === id);
-      if (existing) existing.qty = val;
-      else window.cart.push({ id, qty: val });
-      updateCartBadge();
-      const sumEl = document.querySelector('.product-sum span');
-        if (sumEl) {
-          const p = products.find(x => x.id === id);
-          if (p) sumEl.textContent = `${(p.price * val).toLocaleString('ru-RU')} ₽`;
-        }
+  });
+
+  app.addEventListener('submit', (e) => {
+    if (e.target.id === 'product-form') {
+      e.preventDefault();
+      const form = e.target;
+      const id = form.dataset.id;
+
+      const data = {
+        title: form.title ? form.title.value : '',
+        src: form.src ? form.src.value : "https://via.placeholder.com/150",
+        text: form.text ? form.text.value : ''
+      };
+
+      if (id) {
+        window.api.update(id, data, () => {
+          window.location.hash = '';
+          loadData(render);
+        }, console.error);
+      } else {
+        window.api.create(data, () => {
+          window.location.hash = '';
+          loadData(render);
+        }, console.error);
+      }
     }
   });
 
@@ -99,5 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('hashchange', render);
-  render();
+
+  if (!window.cart) window.cart = [];
+  loadData(render);
 });
