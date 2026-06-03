@@ -1,16 +1,17 @@
 {
   "name": "lab03_bykov_psp",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "bootstrap": "^5.3.8"
+    "bootstrap": "^5.3.3",
+    "three": "^0.128.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
   }
 }
