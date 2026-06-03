@@ -27,6 +27,72 @@ document.addEventListener('DOMContentLoaded', () => {
     return `<div class="container mt-3"><div class="alert alert-light border shadow-sm d-flex justify-content-between align-items-center p-3"><div><span style="font-size:24px">🛒</span> <strong>Выбрано акций:</strong> ${totalQty} шт.</div><button id="clear-cart-btn" class="btn btn-outline-danger btn-sm">Очистить</button></div></div>`;
   };
 
+  const initThreeD = () => {
+    const container = document.getElementById('canvas-container');
+    if (!container) return;
+
+    const width = container.clientWidth || 500;
+    const height = container.clientHeight || 400;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8f9fa);
+
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(5, 10, 7);
+    scene.add(dirLight);
+
+    const loader = new THREE.GLTFLoader();
+    loader.load('models/sunglasses.glb', (gltf) => {
+      const model = gltf.scene;
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      
+      model.position.x -= center.x;
+      model.position.y -= center.y;
+      model.position.z -= center.z;
+      
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * (Math.PI / 180);
+      const cameraZ = (maxDim / (2 * Math.tan(fov / 2))) * 1.5;
+      
+      camera.position.set(0, 0, cameraZ);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      
+      scene.add(model);
+    }, undefined, console.error);
+
+    const animate = () => {
+      if (!document.getElementById('canvas-container')) return;
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (!document.getElementById('canvas-container')) return;
+      const w = container.clientWidth || 500;
+      const h = container.clientHeight || 400;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  };
+
   const render = () => {
     const hash = window.location.hash;
     updateCartBadge();
@@ -45,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const inCart = (window.cart || []).find(c => String(c.id) === id);
       const qtyInput = document.querySelector('.qty-input');
       if (qtyInput && inCart) qtyInput.value = inCart.qty;
+
+      setTimeout(initThreeD, 0);
     } else {
       const filtered = currentFilter
           ? items.filter(p => p.title.toLowerCase().includes(currentFilter) || p.text.toLowerCase().includes(currentFilter))

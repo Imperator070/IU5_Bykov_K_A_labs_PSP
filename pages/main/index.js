@@ -56,7 +56,7 @@ window.getDetailPage = function(item) {
       </div>
       <div class="row">
         <div class="col-md-6 mb-4">
-          <img src="${item.src}" class="img-fluid rounded shadow border border-danger" alt="${item.title}">
+          <div id="canvas-container" style="width: 100%; height: 400px; background-color: #f8f9fa;" class="rounded shadow border border-danger"></div>
         </div>
         <div class="col-md-6">
           <h1 class="mb-3 text-danger">${item.title}</h1>
