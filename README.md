@@ -15,9 +15,12 @@
 ## Результаты
 
 ### Главная страница (изначальное положение)
+<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/b178e736-ee19-49fd-bb0d-a63feaf8e799" />
 
 
 ### Изменение карточки
+<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/0fb5bd27-9b4a-46fe-827c-f796c1375e8a" />
 
 
 ### Подробнее
+<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/69ea2294-a52b-49c9-9b47-793a5c2c85a4" />
